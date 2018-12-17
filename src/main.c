@@ -69,7 +69,8 @@ int main(int argc, char** argv){
 		// Récupérer le nombre de millisecondes depuis le lancement du programme dans le temps courant
         durationSinceStart = getCurrentTimeMilliSec();
 		// Récupérer les actions de la souris et du clavier pour changer la direction du pacman
-        g.PakuMan.p.x += ELT_SIZE;
+        processKeyboardNMouse(g.PakuMan.direction,0);
+
 		// Déplacement des personnages présents dans le jeu g suivant leur nouvelle direction
 
 

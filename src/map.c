@@ -21,7 +21,7 @@ Map initMAP(int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX],int mapWidth, int mapHeight){
 	// Parcours du tableau map donnée en paramètre et copie dans la map de la structure Map
     int i,j;
     for(i = 0; i < MAP_WIDTH_MAX; i++){
-        for(j = 0 ; j<MAP_HEIGHT_MAX; j++){
+        for(j = 0 ; j < MAP_HEIGHT_MAX; j++){
             m.map[j][i] = map[j][i];
         }
     }
