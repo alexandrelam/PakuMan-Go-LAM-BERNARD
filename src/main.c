@@ -48,17 +48,24 @@ int main(int argc, char** argv){
 				{1,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2,1},
 				{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}};
 
-    int durationSinceStart = 0;
 
 	//////////////////////////////////// INITIALISATION
 	// Initialisation du jeu
     g = init_game(&ren, &win, mapWidth, mapHeight);
+    g.countdown = DEADLINE;
+    g.score = 0;
+
 
 	// Initialisation de la map du jeu
     g.myMap = initMAP( map, MAP_WIDTH_MAX, MAP_HEIGHT_MAX);
 
 	// Initialisation du pakuman et des fantomes du jeu
     g.PakuMan = pakumanInit(ELT_SIZE +5, ELT_SIZE + 5, direction, PAKU_SIZE);
+    g.Ghost1 = ghostInit(270, 300, UP, GHOST_SIZE);
+    g.Ghost2 = ghostInit(270, 300, DOWN, GHOST_SIZE);
+    g.Ghost3 = ghostInit(270, 300, RIGHT, GHOST_SIZE);
+    g.Ghost4 = ghostInit(270, 300, LEFT, GHOST_SIZE);
+
 
 	// Affichage de l'écran de démarrage du jeu
 	displayStartPanel( g, ren);
@@ -67,21 +74,33 @@ int main(int argc, char** argv){
 	//////////////////////////////////// DEBUT DU JEU
 	while (!gameOver){
 		// Récupérer le nombre de millisecondes depuis le lancement du programme dans le temps courant
-        durationSinceStart = getCurrentTimeMilliSec();
+        currTime = getCurrentTimeMilliSec();
 		// Récupérer les actions de la souris et du clavier pour changer la direction du pacman
         processKeyboardNMouse(&g.PakuMan.direction,0);
 
-
 		// Déplacement des personnages présents dans le jeu g suivant leur nouvelle direction
+        pakumanMove(&g.PakuMan, g.myMap.map, g.PakuMan.direction , MAP_WIDTH_MAX * ELT_SIZE , ELT_SIZE *MAP_HEIGHT_MAX);
+        ghostMoveAleat(&g.Ghost1, g.myMap.map, MAP_WIDTH_MAX,MAP_HEIGHT_MAX);
+        ghostMoveAleat(&g.Ghost2, g.myMap.map, MAP_WIDTH_MAX,MAP_HEIGHT_MAX);
+        ghostMoveAleat(&g.Ghost3, g.myMap.map, MAP_WIDTH_MAX,MAP_HEIGHT_MAX);
+        ghostMoveAleat(&g.Ghost4, g.myMap.map, MAP_WIDTH_MAX,MAP_HEIGHT_MAX);
+        if (pakumanEatSomething(g.PakuMan,g.myMap.map)==1){
                 // on incrémente le nombre de points en conséquence
+                g.score += GUM_PTS;
+        }
 
 		// Si c'est une BigGum
-
+        if (pakumanEatSomething(g.PakuMan,g.myMap.map)==2){
                 // on incrémente le nombre de points en conséquence
-
+                g.score += BIG_GUM_PTS;
+        }
 		// Si c'est une cerise
+		if (pakumanEatSomething(g.PakuMan,g.myMap.map)==3){
 
                 // on incrémente le nombre de points en conséquence
+                g.score += CHERRY_PTS;
+		}
+
 
 		// Si PakuMan meurt en rentrant en collision avec un des 4 fantomes,
 
@@ -91,14 +110,14 @@ int main(int argc, char** argv){
 
 
 		// Si le temps écoulé est supérieur à 1 seconde (1000 millisecondes)
-
+        if(currTime - precTime>=1000){
 			//On décrémente le compte à rebours de 1
-
+            g.countdown -= 1;
 			//Le temps précédent devient le temps courant
-
+            precTime = currTime;
+	}
 			// Toutes les 30 secondes, on met aléatoirement une cerise sur le plateau
 
-        pakumanMove(&g.PakuMan, g.myMap.map, g.PakuMan.direction , MAP_WIDTH_MAX * ELT_SIZE , ELT_SIZE *MAP_HEIGHT_MAX);
 
 		// On récupére la chose mangée éventuellement par le pakuman
 
@@ -109,18 +128,24 @@ int main(int argc, char** argv){
 		//	vide le contenu du rendu
         clearRenderer(ren);
 		// Mettre le panneau des scores dans le rendu
-
+        addScorePanelToRenderer(g, ren);
 		// Mettre la map dans le rendu
         addMapToRenderer(g.myMap, ren);
 		// Mettre les personnages dans le rendu
         addPakumanToRenderer(g.PakuMan, ren);
+        addGhostToRenderer(g.Ghost1, 1, ren);
+        addGhostToRenderer(g.Ghost2, 2, ren);
+        addGhostToRenderer(g.Ghost3, 3, ren);
+        addGhostToRenderer(g.Ghost4, 4, ren);
+
+
 
 		//On met à jour l'affichage à partir du rendu
         updateDisplay(ren);
 		// Si le temps est écoulé ou si le nombre de vies de PakuMan est égal à 0
 
 		//test fin de jeu
-        if(durationSinceStart > TIMEBEFOREQUIT){
+        if(currTime > TIMEBEFOREQUIT){
             quitGame(&ren, &win);
         }
 

@@ -35,19 +35,19 @@ void pakumanGetArrayCoord(int x, int y,int *mapX, int* mapY){
 int pakumanWallCollisionNewPos( int x, int y,int size,int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX]){
 	int mapXmin, mapYmin, mapXmax, mapYmax;
 	// Récupération des coordonnées (mapXmin, mapYmin) de la map correspondant au coin Haut-Gauche du pakuman en utilisant les coordonnées (x,y) du pakuman dans le repère écran
-    mapXmin = x;
-    mapYmin = y;
+    mapXmin = x / ELT_SIZE;
+    mapYmin = y / ELT_SIZE;
 	// Récupération des coordonnées (mapXmax, mapYmax) de la map correspondant au coin Bas-Droit du pakuman en utilisant les coordonnées (x,y) du pakuman dans le repère écran et la taille du pakuman
-    mapXmax = x + PAKU_SIZE;
-    mapYmax = y + PAKU_SIZE;
+    mapXmax = (x + PAKU_SIZE)/ELT_SIZE;
+    mapYmax = (y + PAKU_SIZE)/ELT_SIZE;
 	// Teste si les coins Haut-Gauche, Haut-Droit, Bas-Gauche et Bas-Droit sont dans une case de mur
-	if (map[mapYmin/ ELT_SIZE][mapXmin/ ELT_SIZE]==1)
+	if (map[mapYmin][mapXmin]==1)
         return 0;
-    if (map[mapYmax/ ELT_SIZE][mapXmin/ ELT_SIZE]==1)
+    if (map[mapYmin][mapXmax]==1)
         return 0;
-    if (map[mapYmax/ ELT_SIZE][mapXmin/ ELT_SIZE]==1)
+    if (map[mapYmax][mapXmin]==1)
         return 0;
-    if (map[mapYmax/ ELT_SIZE][mapXmax/ ELT_SIZE]==1)
+    if (map[mapYmax][mapXmax]==1)
         return 0;
     else {
         return 1;
@@ -118,20 +118,27 @@ int pakumanEatSomething(character c,int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX]){
 	int mapXmin, mapYmin, mapXmax, mapYmax;
 	int food=0;
 	// Récupération des coordonnées (mapXmin, mapYmin) de la map correspondant au coin Haut-Gauche du pakuman en utilisant les coordonnées (x,y) du pakuman dans le repère écran
-
+    mapXmin = x / ELT_SIZE;
+    mapYmin = y / ELT_SIZE;
 	// Récupération des coordonnées (mapXmax, mapYmax) de la map correspondant au coin Bas-Droit du pakuman en utilisant les coordonnées (x,y) du pakuman dans le repère écran et la taille du pakuman
-
+    mapXmax = (x + PAKU_SIZE)/ELT_SIZE;
+    mapYmax = (y + PAKU_SIZE)/ELT_SIZE;
 	// Si le coins Haut-Gauche n'est ni dans une case de mur, ni une case vide
-
+    if (map[mapYmin][mapXmin]!=0 && map[mapYmin][mapXmin]!=1)
             // On récupère ce qu'il y a dans la case
-
+            map[mapYmin][mapXmin]=0
             // On "vide" la case (élément EMPTY)
 
 	// Idem pour le coins Bas-Droit
+    if (map[mapYmax][mapXmax]!=0 && map[mapYmax][mapXmax]!=1)
+
 
 	// Idem pour le coins Haut-Droit
+    if (map[mapYmin][mapXmax]!=0 && map[mapYmin][mapXmax]!=1)
 
 	// Idem pour le coins Bas-Gauche n'est ni dans une case de mur, ni une case vide
+    if (map[mapYmax][mapXmin]!=0 && map[mapYmax][mapXmin]!=1)
+
 
 	return food;
 }
