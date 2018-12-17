@@ -5,7 +5,7 @@
  *      Author: José Mennesson
  */
 
- #define TIMEBEFOREQUIT 15000
+ #define TIMEBEFOREQUIT 60000
 
 #ifndef RESSOURCES_H_
 #define RESSOURCES_H_

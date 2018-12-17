@@ -35,45 +35,60 @@ void pakumanGetArrayCoord(int x, int y,int *mapX, int* mapY){
 int pakumanWallCollisionNewPos( int x, int y,int size,int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX]){
 	int mapXmin, mapYmin, mapXmax, mapYmax;
 	// Récupération des coordonnées (mapXmin, mapYmin) de la map correspondant au coin Haut-Gauche du pakuman en utilisant les coordonnées (x,y) du pakuman dans le repère écran
-
+    mapXmin = x;
+    mapYmin = y;
 	// Récupération des coordonnées (mapXmax, mapYmax) de la map correspondant au coin Bas-Droit du pakuman en utilisant les coordonnées (x,y) du pakuman dans le repère écran et la taille du pakuman
-
+    mapXmax = x + PAKU_SIZE;
+    mapYmax = y + PAKU_SIZE;
 	// Teste si les coins Haut-Gauche, Haut-Droit, Bas-Gauche et Bas-Droit sont dans une case de mur
-    return 0;
+	if (map[mapYmin/ ELT_SIZE][mapXmin/ ELT_SIZE]==1)
+        return 0;
+    if (map[mapYmax/ ELT_SIZE][mapXmin/ ELT_SIZE]==1)
+        return 0;
+    if (map[mapYmax/ ELT_SIZE][mapXmin/ ELT_SIZE]==1)
+        return 0;
+    if (map[mapYmax/ ELT_SIZE][mapXmax/ ELT_SIZE]==1)
+        return 0;
+    else {
+        return 1;
+    }
 }
 
 void pakumanMove(character *c, int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX], int newDirection,int screenWidth,int screenHeight){
 		int newX, newY;
 		// Initialisation des nouvelles coordonnées (newX,newY) en fonction des coordonnées du pakuman
-        newX = *c.p.x;
-        newY = *c.p.y;
+        newX = (*c).p.x;
+        newY = (*c).p.y;
 
 		// Affectation de la nouvelle direction à la direction du pakuman
-        newDirection = *c.direction;
+        (*c).direction = newDirection;
 
 		// Si la direction est DROITE et si le pakuman ne sort pas de l'écran,
-        if (newDirection == RIGHT && newX > 0 && newX < MAP_WIDTH_MAX){
+        if ((newDirection == RIGHT) && (newX < screenWidth)){
                 // on incrémente newX
                 newX ++;
         }
 		// Même principe pour la GAUCHE
-        if (newDirection == LEFT && newX > 0 && newX < MAP_WIDTH_MAX){
+        if (newDirection == LEFT && newX > 0 ){
                 // on incrémente newX
-                newX -= 1;
+                newX --;
         }
 		// Même principe pour le BAS
-        if (newDirection == DOWN && newY > 0 && newY < MAP_HEIGHT_MAX){
+        if (newDirection == DOWN && newY < screenHeight){
                 // on incrémente newX
                 newY ++;
         }
 		// Même principe pour le HAUT
-        if (newDirection == UP && newY > 0 && newY < MAP_HEIGHT_MAX){
+        if (newDirection == UP && newY > 0){
                 // on incrémente newX
-                newX -= 1;
+                newY --;
         }
 		// Si la nouvelle position n'entre pas en collision avec un mur
-
+        if (pakumanWallCollisionNewPos(newX,newY,(*c).size,map) == 1){
                     // on affecte les nouvelles coordonnées (newX, newY) au pakuman
+                (*c).p.x = newX;
+                (*c).p.y = newY;
+        }
 
 }
 

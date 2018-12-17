@@ -58,7 +58,7 @@ int main(int argc, char** argv){
     g.myMap = initMAP( map, MAP_WIDTH_MAX, MAP_HEIGHT_MAX);
 
 	// Initialisation du pakuman et des fantomes du jeu
-    g.PakuMan = pakumanInit(ELT_SIZE, ELT_SIZE, direction, PAKU_SIZE);
+    g.PakuMan = pakumanInit(ELT_SIZE +5, ELT_SIZE + 5, direction, PAKU_SIZE);
 
 	// Affichage de l'écran de démarrage du jeu
 	displayStartPanel( g, ren);
@@ -69,15 +69,10 @@ int main(int argc, char** argv){
 		// Récupérer le nombre de millisecondes depuis le lancement du programme dans le temps courant
         durationSinceStart = getCurrentTimeMilliSec();
 		// Récupérer les actions de la souris et du clavier pour changer la direction du pacman
-        processKeyboardNMouse(g.PakuMan.direction,0);
+        processKeyboardNMouse(&g.PakuMan.direction,0);
+
 
 		// Déplacement des personnages présents dans le jeu g suivant leur nouvelle direction
-
-
-		// On récupére la chose mangée éventuellement par le pakuman
-
-		// Si c'est une Gum
-
                 // on incrémente le nombre de points en conséquence
 
 		// Si c'est une BigGum
@@ -102,6 +97,12 @@ int main(int argc, char** argv){
 			//Le temps précédent devient le temps courant
 
 			// Toutes les 30 secondes, on met aléatoirement une cerise sur le plateau
+
+        pakumanMove(&g.PakuMan, g.myMap.map, g.PakuMan.direction , MAP_WIDTH_MAX * ELT_SIZE , ELT_SIZE *MAP_HEIGHT_MAX);
+
+		// On récupére la chose mangée éventuellement par le pakuman
+
+		// Si c'est une Gum
 
 
 
