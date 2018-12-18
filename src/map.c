@@ -6,6 +6,9 @@
  */
 
 #include "map.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 //////////////////////////////////////////////////////////////////////////
 /////           IL FAUT MODIFIER CE FICHIER                         //////
@@ -33,11 +36,20 @@ Map initMAP(int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX],int mapWidth, int mapHeight){
 
 void putRandomCherry(Map *m){
 	// Initialisation aléatoire de la cerise
+	int posx,posy,running = 1;
+    while(running){
+        posx = rand() % 22;
+        posy = rand() % 20;
+        if((*m).map[posy][posx] != 1){
+            (*m).map[posy][posx] = CHERRY;
+            running = 0;
+        }
+    }
+
+
 
 	// Tant que l'on est sur un mur
-
-		// On défini de nouvelles coordonnées pour la cerise
-
+    // On défini de nouvelles coordonnées pour la cerise
 	// Enfin, on met une cerise dans la map aux coordonnées calculées précédemment
 
 }

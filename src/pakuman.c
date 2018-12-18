@@ -103,43 +103,57 @@ void pakumanMoveAI(character *c, int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX], int scr
 }
 
 int pakumanGhostCollision(character PakuMan,character Ghost){
-	// Le pakuman et le fantome sont contenus dans deux rectangles. Si ces rectangles se chevauchent
 
+	// Le pakuman et le fantome sont contenus dans deux rectangles. Si ces rectangles se chevauchent
+    if ((PakuMan.p.x < Ghost.p.x + GHOST_SIZE) &&
+   PakuMan.p.x + PAKU_SIZE > Ghost.p.x &&
+   PakuMan.p.y < Ghost.p.y + GHOST_SIZE &&
+   PakuMan.p.y + PAKU_SIZE > Ghost.p.y) {
+    // collision détectée !
+        return 1;
+    }
+    else{
+        return 0;
+    }
 		// on retourne vrai
 
 	// sinon
 
 		// on retourne faux
-
-	return 0;
 }
 
 int pakumanEatSomething(character c,int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX]){
 	int mapXmin, mapYmin, mapXmax, mapYmax;
 	int food=0;
 	// Récupération des coordonnées (mapXmin, mapYmin) de la map correspondant au coin Haut-Gauche du pakuman en utilisant les coordonnées (x,y) du pakuman dans le repère écran
-    mapXmin = x / ELT_SIZE;
-    mapYmin = y / ELT_SIZE;
+    mapXmin = c.p.x / ELT_SIZE;
+    mapYmin = c.p.y / ELT_SIZE;
 	// Récupération des coordonnées (mapXmax, mapYmax) de la map correspondant au coin Bas-Droit du pakuman en utilisant les coordonnées (x,y) du pakuman dans le repère écran et la taille du pakuman
-    mapXmax = (x + PAKU_SIZE)/ELT_SIZE;
-    mapYmax = (y + PAKU_SIZE)/ELT_SIZE;
+    mapXmax = (c.p.x + PAKU_SIZE)/ELT_SIZE;
+    mapYmax = (c.p.y + PAKU_SIZE)/ELT_SIZE;
 	// Si le coins Haut-Gauche n'est ni dans une case de mur, ni une case vide
-    if (map[mapYmin][mapXmin]!=0 && map[mapYmin][mapXmin]!=1)
+    if (map[mapYmin][mapXmin]!=0 && map[mapYmin][mapXmin]!=1){
             // On récupère ce qu'il y a dans la case
-            map[mapYmin][mapXmin]=0
+            food = map[mapYmin][mapXmin];
             // On "vide" la case (élément EMPTY)
-
+            map[mapYmin][mapXmin]=0;
+    }
 	// Idem pour le coins Bas-Droit
-    if (map[mapYmax][mapXmax]!=0 && map[mapYmax][mapXmax]!=1)
-
+    if (map[mapYmax][mapXmax]!=0 && map[mapYmax][mapXmax]!=1){
+        food = map[mapYmax][mapXmax];
+        map[mapYmax][mapXmax] = 0;
+    }
 
 	// Idem pour le coins Haut-Droit
-    if (map[mapYmin][mapXmax]!=0 && map[mapYmin][mapXmax]!=1)
-
+    if (map[mapYmin][mapXmax]!=0 && map[mapYmin][mapXmax]!=1){
+        food = map[mapYmin][mapXmax];
+        map[mapYmin][mapXmax] = 0;
+    }
 	// Idem pour le coins Bas-Gauche n'est ni dans une case de mur, ni une case vide
-    if (map[mapYmax][mapXmin]!=0 && map[mapYmax][mapXmin]!=1)
-
-
+    if (map[mapYmax][mapXmin]!=0 && map[mapYmax][mapXmin]!=1){
+        food = map[mapYmax][mapXmin];
+        map[mapYmax][mapXmin] = 0;
+    }
 	return food;
 }
 

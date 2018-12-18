@@ -5,14 +5,11 @@
  *      Author: José Mennesson
  */
 
- #define TIMEBEFOREQUIT 60000
-
 #ifndef RESSOURCES_H_
 #define RESSOURCES_H_
 
 // Taille d'un élément (d'une case) du jeu
 #define ELT_SIZE 30
-
 // Taille maximum de la map
 #define MAP_WIDTH_MAX   100
 #define MAP_HEIGHT_MAX  100
@@ -20,6 +17,11 @@
 // Taille des personnages
 #define PAKU_SIZE ELT_SIZE-10
 #define GHOST_SIZE ELT_SIZE
+
+//Spawn de Pac Man
+#define PAKU_SPAWN ELT_SIZE+5
+#define GHOST_SPAWN_X 9*ELT_SIZE
+#define GHOST_SPAWN_Y 10*ELT_SIZE
 
 // Nombre de fantomes
 #define NB_GHOST 4
