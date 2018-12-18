@@ -16,6 +16,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 
+
+
 int main(int argc, char** argv){
 
 // Déclaration des variables
@@ -82,6 +84,7 @@ int main(int argc, char** argv){
     g.score = 0;
 
 
+
 	// Initialisation de la map du jeu
     g.myMap = initMAP( map, MAP_WIDTH_MAX, MAP_HEIGHT_MAX);
 
@@ -106,10 +109,12 @@ int main(int argc, char** argv){
 
 		// Déplacement des personnages présents dans le jeu g suivant leur nouvelle direction
         pakumanMove(&g.PakuMan, g.myMap.map, g.PakuMan.direction , MAP_WIDTH_MAX * ELT_SIZE , ELT_SIZE *MAP_HEIGHT_MAX);
-        ghostMoveAleat(&g.Ghost1, g.myMap.map, g.myMap.width,g.myMap.height);
-        ghostMoveAleat(&g.Ghost2, g.myMap.map, g.myMap.width,g.myMap.height);
-        ghostMoveAleat(&g.Ghost3, g.myMap.map, g.myMap.width,g.myMap.height);
-        ghostMoveAleat(&g.Ghost4, g.myMap.map, g.myMap.width,g.myMap.height);
+
+        ghostMoveAleat(&g.Ghost1, g.myMap.map,MAP_WIDTH_MAX * ELT_SIZE,ELT_SIZE *MAP_HEIGHT_MAX);
+        ghostMoveAleat(&g.Ghost2, g.myMap.map, MAP_WIDTH_MAX * ELT_SIZE,ELT_SIZE *MAP_HEIGHT_MAX);
+        ghostMoveAleat(&g.Ghost3, g.myMap.map, MAP_WIDTH_MAX * ELT_SIZE,ELT_SIZE *MAP_HEIGHT_MAX);
+        ghostMoveAleat(&g.Ghost4, g.myMap.map, MAP_WIDTH_MAX * ELT_SIZE,ELT_SIZE *MAP_HEIGHT_MAX);
+
 
         // Si c'est une Gum
                 // on incrémente le nombre de points en conséquence
