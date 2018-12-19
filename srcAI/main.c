@@ -1,8 +1,75 @@
 #include "mainPaku.h"
 #include "character.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #define EMTSIZE  30
 
-void pakumanChangeDirectionAI(character *c,int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX], Game g){
+int detectionCapteur(int capteur[], int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX]){
+    int detectedNode = map[capteur[1]][capteur[0]];
+    if(detectedNode > 1){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+
+int collisionPoint(int px,int py,int rx, int ry, int width,int height){
+    if ((px >= rx) && (px <= width) && (py >= ry) && (py <= height)) {
+        return 1;
+    }
+    else{
+        return 0;
+    }
+
+}
+int capteurFantomes(int capteur[], character fantomes){
+    //pass
+    int x = fantomes.p.x;
+    int y = fantomes.p.y;
+    int width = x + EMTSIZE;
+    int height = y + EMTSIZE;
+
+    if(collisionPoint(capteur[0],capteur[1],x,y,width,height)){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+
+
+}
+void pakumanChangeDirectionAIGhost(character *c,int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX], Game g){
+
+    int centre_x = (*c).p.x + (EMTSIZE / 2);
+    int centre_y = (*c).p.y + (EMTSIZE / 2);
+
+    int hautf[2] = {centre_x, (centre_y - EMTSIZE)};
+    int basf[2] = {centre_x , (centre_y + EMTSIZE)};
+    int gauchef[2] = {(centre_x - EMTSIZE) , centre_y};
+    int droitef[2] = {(centre_x + EMTSIZE) , centre_y};
+
+    if(capteurFantomes(hautf, g.Ghost1) || capteurFantomes(hautf, g.Ghost2) ||capteurFantomes(hautf, g.Ghost3) ||capteurFantomes(hautf, g.Ghost4)){
+        (*c).direction = DOWN;
+        printf("down");
+    }
+    else if(capteurFantomes(basf, g.Ghost1) || capteurFantomes(basf, g.Ghost2) ||capteurFantomes(basf, g.Ghost3) ||capteurFantomes(basf, g.Ghost4)){
+        (*c).direction = UP;
+        printf("up");
+    }
+    else if(capteurFantomes(gauchef, g.Ghost1) || capteurFantomes(gauchef, g.Ghost2) ||capteurFantomes(gauchef, g.Ghost3) ||capteurFantomes(gauchef, g.Ghost4)){
+        (*c).direction = RIGHT;
+        printf("r");
+    }
+    else if(capteurFantomes(droitef, g.Ghost1) || capteurFantomes(droitef, g.Ghost2) ||capteurFantomes(droitef, g.Ghost3) ||capteurFantomes(droitef, g.Ghost4)){
+        (*c).direction = LEFT;
+        printf("l");
+    }
+
+    }
+
+void pakumanChangeDirectionAIWall(character *c,int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX], Game g){
 	// C'est à vous de proposer votre propre solution changement de direction intelligent !
 
 
@@ -12,21 +79,66 @@ void pakumanChangeDirectionAI(character *c,int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX
     int centre_x = (*c).p.x + (EMTSIZE / 2);
     int centre_y = (*c).p.y + (EMTSIZE / 2);
 
-    //capteur de coord x , y en coord du repere
+    //capteur de coord x , y en coord du repere pour les gums
     int haut[2] = {centre_x / EMTSIZE, (centre_y - EMTSIZE)/ EMTSIZE};
     int bas[2] = {centre_x / EMTSIZE, (centre_y + EMTSIZE)/ EMTSIZE};
     int gauche[2] = {(centre_x - EMTSIZE) / EMTSIZE, centre_y/ EMTSIZE};
     int droite[2] = {(centre_x + EMTSIZE) / EMTSIZE, centre_y/ EMTSIZE};
 
+    int hautf[2] = {centre_x, (centre_y - EMTSIZE)};
+    int basf[2] = {centre_x , (centre_y + EMTSIZE)};
+    int gauchef[2] = {(centre_x - EMTSIZE) , centre_y};
+    int droitef[2] = {(centre_x + EMTSIZE) , centre_y};
+
+    printf("haut : %d\n",detectionCapteur(haut,map));
+    printf("bas : %d\n",detectionCapteur(bas,map));
+    printf("droite : %d\n",detectionCapteur(droite,map));
+    printf("gauche : %d\n",detectionCapteur(gauche,map));
+    printf("\n\n");
+
+    /*
+    printf("hautf : %d %d %d %d\n",capteurFantomes(hautf, g.Ghost1),capteurFantomes(hautf, g.Ghost2),capteurFantomes(hautf, g.Ghost3),capteurFantomes(hautf, g.Ghost4));
+    printf("basf : %d %d %d %d\n",capteurFantomes(basf, g.Ghost1),capteurFantomes(basf, g.Ghost2),capteurFantomes(basf, g.Ghost3),capteurFantomes(basf, g.Ghost4));
+    printf("droitef : %d %d %d %d\n",capteurFantomes(droitef, g.Ghost1),capteurFantomes(droitef, g.Ghost2),capteurFantomes(droitef, g.Ghost3),capteurFantomes(droitef, g.Ghost4));
+    printf("gauchef : %d %d %d %d\n",capteurFantomes(gauchef, g.Ghost1),capteurFantomes(gauchef, g.Ghost2),capteurFantomes(gauchef, g.Ghost3),capteurFantomes(gauchef, g.Ghost4));
+    printf("\n\n");
+    */
+
     //check sur quelle case est le capteur
+    if(detectionCapteur(bas,map)){
+        (*c).direction = DOWN;
+    }
+    else if(g.score < 700)
+    {
+        if(detectionCapteur(droite,map)){
+            (*c).direction = RIGHT;
+        }
+        else if(detectionCapteur(gauche,map)){
+            (*c).direction = LEFT;
+        }
+        else if(detectionCapteur(haut,map)){
+        (*c).direction = UP;
+        }
+        else{
+            (*c).direction = rand() % 4;
+        }
+    }
 
+    else if(g.score > 700){
+        if(detectionCapteur(gauche,map)){
+            (*c).direction = LEFT;
+        }
+        else if(detectionCapteur(droite,map)){
+            (*c).direction = RIGHT;
+        }
+        else if(detectionCapteur(haut,map)){
+        (*c).direction = UP;
+        }
+        else{
+            (*c).direction = rand() % 4;
+        }
 
-
-
-
-
-
-
+}
 }
 
 void pakumanMoveAI(character *c, int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX], int screenWidth, int screenHeight, Game g){
@@ -67,8 +179,9 @@ void pakumanMoveAI(character *c, int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX], int scr
                 (*c).p.x = newX;
                 (*c).p.y = newY;
         }else if(pakumanWallCollisionNewPos(newX,newY,(*c).size,map) == 1){
-            (*c).direction = DOWN; //La detection des murs marchent.
+            pakumanChangeDirectionAIWall(c,map,g); //La detection des murs marchent.
         }
+        pakumanChangeDirectionAIGhost(c,map,g);
 }
 
 int main(int argc, char * argv[]){
