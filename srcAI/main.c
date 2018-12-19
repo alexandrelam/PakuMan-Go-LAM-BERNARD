@@ -99,6 +99,30 @@ void pakumanChangeDirectionAIGhost(character *c,int map[MAP_HEIGHT_MAX][MAP_WIDT
 
     int actualDirection = (*c).direction;
 
+    /*----------------------------------------------------------------------------------------------------------*/
+    // COLLISION intersection manger
+
+    if((map[basf[1] / EMTSIZE][basf[0]/ EMTSIZE] > 1) && (px % EMTSIZE == 0)){
+        (*c).direction = DOWN;
+    }
+
+    else if((map[droitef[1]/ EMTSIZE][droitef[0]/ EMTSIZE] > 1) && (py % EMTSIZE == 0)){
+        (*c).direction = RIGHT;
+    }
+    else if((map[hautf[1]/ EMTSIZE][hautf[0]/ EMTSIZE] > 1) && (px % EMTSIZE == 0)){
+        (*c).direction = UP;
+    }
+    else if((map[gauchef[1]/ EMTSIZE][gauchef[0]/ EMTSIZE] > 1) && (py % EMTSIZE == 0)){
+        (*c).direction = LEFT;
+    }
+
+
+
+
+
+
+    /*----------------------------------------------------------------------------------------------------------*/
+    // COLLISION FANTOMES
     if(capteurFantomes(hautf, g.Ghost1) || capteurFantomes(hautf, g.Ghost2) ||capteurFantomes(hautf, g.Ghost3) ||capteurFantomes(hautf, g.Ghost4)){
 
         if((map[basCAC[1] / EMTSIZE][basCAC[0]/EMTSIZE] == 1) && (map[gauchef[1] / EMTSIZE][gauchef[0]/EMTSIZE] == 0)){
