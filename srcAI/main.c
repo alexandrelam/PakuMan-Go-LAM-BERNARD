@@ -37,13 +37,23 @@ int capteurFantomes(int capteur[], character fantomes){
     else{
         return 0;
     }
+}
 
-
+int noWallCollisionCapteur(int capteur[], int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX]){
+    if(map[capteur[1]/EMTSIZE][capteur[0]/EMTSIZE] != 1){
+        return 1;
+    }
+    else{
+        return 0;
+    }
 }
 void pakumanChangeDirectionAIGhost(character *c,int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX], Game g){
 
-    int centre_x = (*c).p.x + (EMTSIZE / 2);
-    int centre_y = (*c).p.y + (EMTSIZE / 2);
+    int px = (*c).p.x;
+    int py = (*c).p.y;
+
+    int centre_x = px + (EMTSIZE / 2);
+    int centre_y = py + (EMTSIZE / 2);
 
     int hautf[2] = {centre_x, (centre_y - EMTSIZE)};
     int basf[2] = {centre_x , (centre_y + EMTSIZE)};
@@ -51,21 +61,54 @@ void pakumanChangeDirectionAIGhost(character *c,int map[MAP_HEIGHT_MAX][MAP_WIDT
     int droitef[2] = {(centre_x + EMTSIZE) , centre_y};
 
     if(capteurFantomes(hautf, g.Ghost1) || capteurFantomes(hautf, g.Ghost2) ||capteurFantomes(hautf, g.Ghost3) ||capteurFantomes(hautf, g.Ghost4)){
-        (*c).direction = DOWN;
-        printf("down");
+        if(noWallCollisionCapteur(basf, map)){
+            (*c).direction = DOWN;
+        }
+        else if(noWallCollisionCapteur(gauchef, map)){
+            (*c).direction = LEFT;
+        }
+        else if(noWallCollisionCapteur(droitef, map)){
+            (*c).direction = RIGHT;
+        }
+        printf("Ghost : ^\n");
     }
     else if(capteurFantomes(basf, g.Ghost1) || capteurFantomes(basf, g.Ghost2) ||capteurFantomes(basf, g.Ghost3) ||capteurFantomes(basf, g.Ghost4)){
-        (*c).direction = UP;
-        printf("up");
+        if(noWallCollisionCapteur(hautf, map)){
+            (*c).direction = UP;
+        }
+        else if(noWallCollisionCapteur(gauchef, map)){
+            (*c).direction = LEFT;
+        }
+        else if(noWallCollisionCapteur(droitef, map)){
+            (*c).direction = RIGHT;
+        }
+        printf("Ghost : v\n");
     }
     else if(capteurFantomes(gauchef, g.Ghost1) || capteurFantomes(gauchef, g.Ghost2) ||capteurFantomes(gauchef, g.Ghost3) ||capteurFantomes(gauchef, g.Ghost4)){
-        (*c).direction = RIGHT;
-        printf("r");
+        if(noWallCollisionCapteur(basf, map)){
+            (*c).direction = DOWN;
+        }
+        else if(noWallCollisionCapteur(hautf, map)){
+            (*c).direction = UP;
+        }
+        else if(noWallCollisionCapteur(droitef, map)){
+            (*c).direction = RIGHT;
+        }
+        printf("Ghost : <\n");
     }
     else if(capteurFantomes(droitef, g.Ghost1) || capteurFantomes(droitef, g.Ghost2) ||capteurFantomes(droitef, g.Ghost3) ||capteurFantomes(droitef, g.Ghost4)){
-        (*c).direction = LEFT;
-        printf("l");
+        if(noWallCollisionCapteur(basf, map)){
+            (*c).direction = DOWN;
+        }
+        else if(noWallCollisionCapteur(gauchef, map)){
+            (*c).direction = LEFT;
+        }
+        else if(noWallCollisionCapteur(hautf, map)){
+            (*c).direction = UP;
+        }
+        printf("Ghost : >\n");
     }
+    // !! safe way == retourner dans la direction opposée
 
     }
 
