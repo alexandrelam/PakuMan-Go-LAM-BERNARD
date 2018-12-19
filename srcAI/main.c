@@ -38,7 +38,7 @@ int capteurFantomes(int capteur[], character fantomes){
         return 0;
     }
 }
-
+/*
 int noWallCollisionCapteur(int capteur[], int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX]){
     if(map[capteur[1]/EMTSIZE][capteur[0]/EMTSIZE] != 1){
         return 1;
@@ -47,6 +47,37 @@ int noWallCollisionCapteur(int capteur[], int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX]
         return 0;
     }
 }
+
+
+int canChangeDirGhost(int capteurCAC[],int AcapteurFAR[], int BcapteurFAR[], int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX], int direction){
+    if((noWallCollisionCapteur(AcapteurFAR, map) || noWallCollisionCapteur((BcapteurFAR, map))){
+        if((direction == UP) && (map[(capteur[1]/EMTSIZE) - 1][capteur[0]/EMTSIZE] == 1)){
+            return 1;
+        }
+        else if((direction == DOWN) && (map[capteurCAC[1]/EMTSIZE][capteurCAC[0]/EMTSIZE] == 1))){
+            return 1;
+        }
+        else if((direction == LEFT) && (map[capteurCAC[1]/EMTSIZE][(capteurCAC[0]/EMTSIZE)-1] == 1)){
+            return 1;
+        }
+        else if((direction == RIGHT) && (map[capteurCAC[1]/EMTSIZE][capteurCAC[0]/EMTSIZE] == 1)){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+       }
+
+}
+*/
+/*
+int canTurn(int wantedDir, int currDirection, int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX], capA[], capB[], capC[]){
+    if((currDirection == UP) && (map[capA[1]][capA[0]] == 1) && ((map[capB[1]][capB[0]] == 0) || map[capC[1]][capC[0]] == 0) ){
+        return 1;
+    }
+}
+
+*/
 void pakumanChangeDirectionAIGhost(character *c,int map[MAP_HEIGHT_MAX][MAP_WIDTH_MAX], Game g){
 
     int px = (*c).p.x;
@@ -60,51 +91,60 @@ void pakumanChangeDirectionAIGhost(character *c,int map[MAP_HEIGHT_MAX][MAP_WIDT
     int gauchef[2] = {(centre_x - EMTSIZE) , centre_y};
     int droitef[2] = {(centre_x + EMTSIZE) , centre_y};
 
+
+    int hautCAC[2] = {px + EMTSIZE / 2, py};
+    int basCAC[2] = {px + EMTSIZE / 2 , py + EMTSIZE};
+    int droiteCAC[2] = {px + EMTSIZE , py + EMTSIZE /2};
+    int gaucheCAC[2] = {px , py + EMTSIZE /2 };
+
+    int actualDirection = (*c).direction;
+
     if(capteurFantomes(hautf, g.Ghost1) || capteurFantomes(hautf, g.Ghost2) ||capteurFantomes(hautf, g.Ghost3) ||capteurFantomes(hautf, g.Ghost4)){
-        if(noWallCollisionCapteur(basf, map)){
-            (*c).direction = DOWN;
-        }
-        else if(noWallCollisionCapteur(gauchef, map)){
+
+        if((map[basCAC[1] / EMTSIZE][basCAC[0]/EMTSIZE] == 1) && (map[gauchef[1] / EMTSIZE][gauchef[0]/EMTSIZE] == 0)){
             (*c).direction = LEFT;
         }
-        else if(noWallCollisionCapteur(droitef, map)){
+        else if((map[basCAC[1] / EMTSIZE][basCAC[0]/EMTSIZE] == 1) && (map[droiteCAC[1] / EMTSIZE][droiteCAC[0]/EMTSIZE] == 0)){
             (*c).direction = RIGHT;
+        }
+        else{
+            (*c).direction = DOWN;
         }
         printf("Ghost : ^\n");
     }
     else if(capteurFantomes(basf, g.Ghost1) || capteurFantomes(basf, g.Ghost2) ||capteurFantomes(basf, g.Ghost3) ||capteurFantomes(basf, g.Ghost4)){
-        if(noWallCollisionCapteur(hautf, map)){
-            (*c).direction = UP;
-        }
-        else if(noWallCollisionCapteur(gauchef, map)){
+        if((map[hautCAC[1] / EMTSIZE][hautCAC[0]/EMTSIZE] == 1) && (map[gauchef[1] / EMTSIZE][gauchef[0]/EMTSIZE] == 0)){
             (*c).direction = LEFT;
         }
-        else if(noWallCollisionCapteur(droitef, map)){
+        else if((map[hautCAC[1] / EMTSIZE][hautCAC[0]/EMTSIZE] == 1) && (map[droiteCAC[1] / EMTSIZE][droiteCAC[0]/EMTSIZE] == 0)){
             (*c).direction = RIGHT;
+        }
+        else{
+            (*c).direction = UP;
         }
         printf("Ghost : v\n");
     }
     else if(capteurFantomes(gauchef, g.Ghost1) || capteurFantomes(gauchef, g.Ghost2) ||capteurFantomes(gauchef, g.Ghost3) ||capteurFantomes(gauchef, g.Ghost4)){
-        if(noWallCollisionCapteur(basf, map)){
+        if((map[droiteCAC[1] / EMTSIZE][droiteCAC[0]/EMTSIZE] == 1) && (map[basCAC[1] / EMTSIZE][basCAC[0]/EMTSIZE] == 0)){
             (*c).direction = DOWN;
         }
-        else if(noWallCollisionCapteur(hautf, map)){
+        else if((map[droiteCAC[1] / EMTSIZE][droiteCAC[0]/EMTSIZE] == 1) && (map[hautCAC[1] / EMTSIZE][hautCAC[0]/EMTSIZE] == 0)){
             (*c).direction = UP;
         }
-        else if(noWallCollisionCapteur(droitef, map)){
+        else{
             (*c).direction = RIGHT;
         }
         printf("Ghost : <\n");
     }
     else if(capteurFantomes(droitef, g.Ghost1) || capteurFantomes(droitef, g.Ghost2) ||capteurFantomes(droitef, g.Ghost3) ||capteurFantomes(droitef, g.Ghost4)){
-        if(noWallCollisionCapteur(basf, map)){
+        if((map[gaucheCAC[1] / EMTSIZE][gaucheCAC[0]/EMTSIZE] == 1) &&(map[basCAC[1] / EMTSIZE][basCAC[0]/EMTSIZE] == 0)){
             (*c).direction = DOWN;
         }
-        else if(noWallCollisionCapteur(gauchef, map)){
-            (*c).direction = LEFT;
-        }
-        else if(noWallCollisionCapteur(hautf, map)){
+        else if((map[gaucheCAC[1] / EMTSIZE][gaucheCAC[0]/EMTSIZE] == 1) && (map[hautCAC[1] / EMTSIZE][hautCAC[0]/EMTSIZE] == 0)){
             (*c).direction = UP;
+        }
+        else{
+            (*c).direction = LEFT;
         }
         printf("Ghost : >\n");
     }
@@ -128,10 +168,6 @@ void pakumanChangeDirectionAIWall(character *c,int map[MAP_HEIGHT_MAX][MAP_WIDTH
     int gauche[2] = {(centre_x - EMTSIZE) / EMTSIZE, centre_y/ EMTSIZE};
     int droite[2] = {(centre_x + EMTSIZE) / EMTSIZE, centre_y/ EMTSIZE};
 
-    int hautf[2] = {centre_x, (centre_y - EMTSIZE)};
-    int basf[2] = {centre_x , (centre_y + EMTSIZE)};
-    int gauchef[2] = {(centre_x - EMTSIZE) , centre_y};
-    int droitef[2] = {(centre_x + EMTSIZE) , centre_y};
 
     printf("haut : %d\n",detectionCapteur(haut,map));
     printf("bas : %d\n",detectionCapteur(bas,map));
@@ -139,19 +175,11 @@ void pakumanChangeDirectionAIWall(character *c,int map[MAP_HEIGHT_MAX][MAP_WIDTH
     printf("gauche : %d\n",detectionCapteur(gauche,map));
     printf("\n\n");
 
-    /*
-    printf("hautf : %d %d %d %d\n",capteurFantomes(hautf, g.Ghost1),capteurFantomes(hautf, g.Ghost2),capteurFantomes(hautf, g.Ghost3),capteurFantomes(hautf, g.Ghost4));
-    printf("basf : %d %d %d %d\n",capteurFantomes(basf, g.Ghost1),capteurFantomes(basf, g.Ghost2),capteurFantomes(basf, g.Ghost3),capteurFantomes(basf, g.Ghost4));
-    printf("droitef : %d %d %d %d\n",capteurFantomes(droitef, g.Ghost1),capteurFantomes(droitef, g.Ghost2),capteurFantomes(droitef, g.Ghost3),capteurFantomes(droitef, g.Ghost4));
-    printf("gauchef : %d %d %d %d\n",capteurFantomes(gauchef, g.Ghost1),capteurFantomes(gauchef, g.Ghost2),capteurFantomes(gauchef, g.Ghost3),capteurFantomes(gauchef, g.Ghost4));
-    printf("\n\n");
-    */
-
     //check sur quelle case est le capteur
     if(detectionCapteur(bas,map)){
         (*c).direction = DOWN;
     }
-    else if(g.score < 700)
+    else if(g.score < 900)
     {
         if(detectionCapteur(droite,map)){
             (*c).direction = RIGHT;
@@ -167,7 +195,7 @@ void pakumanChangeDirectionAIWall(character *c,int map[MAP_HEIGHT_MAX][MAP_WIDTH
         }
     }
 
-    else if(g.score > 700){
+    else if(g.score > 900){
         if(detectionCapteur(gauche,map)){
             (*c).direction = LEFT;
         }
